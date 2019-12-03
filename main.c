@@ -18,6 +18,10 @@ int main(int argc,char* argv[]) {
     struct listRecord *customerList;
     customerList = parseInput(argv,&noOfRobots ,&t_maxService,&t_maxArrival);
     createCustomerList(customerList,t_maxService,t_maxArrival);
+    int *robotAvailability;
+    struct customerQueue *c_queue;
+    c_queue=initialiseSimulator(robotAvailability,noOfRobots);
+
     displayCustomers(customerList);
 
     return 0;

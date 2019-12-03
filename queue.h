@@ -9,6 +9,7 @@ struct customer
     int coffee_size;
     int t_arrival;//time for arrival
     int t_service;//time for service
+    int total_wait;// this is for see how much customer waited
     struct customer *next;
 };
 typedef struct customer *pcustomer;//defined pcustomer as pointer to easy usage after
@@ -19,6 +20,12 @@ struct listRecord
     pcustomer tail;
     int size;
 };
+
+struct customerQueue{
+    pcustomer front;
+    pcustomer rear;
+};
+typedef struct customerqueue *cqueue;// defined to use it easier in future usage
 
 struct listRecord* parseInput(char* argv[],int *noOfRobots,int *t_maxService,int *t_maxArrival)
 {//this function parses the information from argv and returns thegi list and pointers
@@ -42,12 +49,13 @@ void createCustomerList(struct listRecord *customerList,int t_maxService,int t_m
     newCustomer->t_arrival=t_maxArrival+1;
     newCustomer->t_service=t_maxService+1;
     newCustomer->next=NULL;
-    for(int count=0;count<customerList->size;count++)
+    for(int count=0;count<customerList->size;count++)//whole loop initializes customer list
     {
         newCustomer=(struct customer*) malloc(sizeof(struct customer));
         newCustomer->coffee_size=rand()%3;// 0 --> tall, 1-->grande, 2--> venti
         newCustomer->coffee_type=rand()%4;// 0 --> espresso, 1 --> americano, 2 --> latte, 3 --> cappuccino
         newCustomer->type=rand()%3;// 0 --> Platinium, 1 --> Gold, 2 --> Silver
+        newCustomer->total_wait=0;
         rand_num=0;
         while(rand_num==0)
             rand_num=rand()%t_maxArrival;
@@ -64,7 +72,7 @@ void createCustomerList(struct listRecord *customerList,int t_maxService,int t_m
             newCustomer->next=NULL;
         }
         else {
-            while (inner_count < count) {
+            while (inner_count < count) {//this loop checks priority and orders the queue in respects of arrival time and priority of membership
 
                 if (tmp->next->t_arrival >= newCustomer->t_arrival) {
                     if ((newCustomer->type <= tmp->next->type && tmp->next->t_arrival == newCustomer->t_arrival)||(tmp->next->t_arrival > newCustomer->t_arrival)) {
@@ -91,6 +99,12 @@ void createCustomerList(struct listRecord *customerList,int t_maxService,int t_m
     }
 }
 
+struct customerQueue * initialiseSimulator(int *robotAvailability,int noOfRobots)
+{
+    robotAvailability = (int *) malloc(sizeof(int)*noOfRobots);
+    cqueue cust_q;
+    cust_q=(struct customerQueue *) malloc(sizeof(struct customerQueue));
+}
 
 void displayCustomers(struct listRecord *customerList)
 {
