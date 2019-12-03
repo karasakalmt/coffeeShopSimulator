@@ -11,6 +11,7 @@ struct customer
     int t_service;//time for service
     int total_wait;// this is for see how much customer waited
     struct customer *next;
+    struct customer *queuenext;//to keep track for using in queue
 };
 typedef struct customer *pcustomer;//defined pcustomer as pointer to easy usage after
 
@@ -25,7 +26,7 @@ struct customerQueue{
     pcustomer front;
     pcustomer rear;
 };
-typedef struct customerqueue *cqueue;// defined to use it easier in future usage
+typedef struct customerQueue *cqueue;// defined to use it easier in future usage
 
 struct listRecord* parseInput(char* argv[],int *noOfRobots,int *t_maxService,int *t_maxArrival)
 {//this function parses the information from argv and returns thegi list and pointers
@@ -101,9 +102,18 @@ void createCustomerList(struct listRecord *customerList,int t_maxService,int t_m
 
 struct customerQueue * initialiseSimulator(int *robotAvailability,int noOfRobots)
 {
-    robotAvailability = (int *) malloc(sizeof(int)*noOfRobots);
+    for(int count=0;count<noOfRobots;count++)
+    {
+        robotAvailability[count]=1;
+    }
     cqueue cust_q;
     cust_q=(struct customerQueue *) malloc(sizeof(struct customerQueue));
+    return cust_q;
+}
+
+void newCustomer()//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
+{
+
 }
 
 void displayCustomers(struct listRecord *customerList)

@@ -18,10 +18,16 @@ int main(int argc,char* argv[]) {
     struct listRecord *customerList;
     customerList = parseInput(argv,&noOfRobots ,&t_maxService,&t_maxArrival);
     createCustomerList(customerList,t_maxService,t_maxArrival);
-    int *robotAvailability;
-    struct customerQueue *c_queue;
+    int *robotAvailability;//array to see if robots are available
+    robotAvailability = (int *) malloc(sizeof(int)*noOfRobots);
+    struct customerQueue *c_queue;//struct pointer to keep the list of active customers
     c_queue=initialiseSimulator(robotAvailability,noOfRobots);
-
+    int isRobotAvailable=1;
+    while(c_queue->front->next!=NULL)
+    {
+        clock++;
+        break;
+    }
     displayCustomers(customerList);
 
     return 0;
