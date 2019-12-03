@@ -104,25 +104,34 @@ struct customerQueue * initialiseSimulator(int *robotAvailability, int noOfRobot
     }
     cqueue cust_q;
     cust_q=(struct customerQueue *) malloc(sizeof(struct customerQueue));
+    cust_q->front=NULL;
+    cust_q->rear=NULL;
     cust_q->size=0;
     return cust_q;
 }
 
-void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
+int newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
 {
     pcustomer tmp;
     tmp=c_queue->front;
     int count;
-    if(c_queue->front==NULL && clock==1)
+    if(clock==1)
     {
         c_queue->front=customerList->front;
         tmp=c_queue->front;
-        while(tmp->next->t_arrival==1)
-
+        c_queue->size++;
+        while(tmp->next->t_arrival==tmp->t_arrival)
+        {
+            tmp->queuenext = tmp->next;
+            tmp=tmp->next;
+            c_queue->size++;
+        }
+        tmp->queuenext=NULL;
+        return tmp->t_arrival;
     }
     for(count=0;count<c_queue->size;count++)
     {
-        tmp
+        tmp=tmp->next;
     }
     for(;count<customerList->size;count++)
     {

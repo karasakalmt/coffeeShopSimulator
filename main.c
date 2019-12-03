@@ -23,7 +23,7 @@ int main(int argc,char* argv[]) {
     struct customerQueue *c_queue;//struct pointer to keep the list of active customers
     c_queue=initialiseSimulator(robotAvailability,noOfRobots);
     //struct
-    int isRobotAvailable=1;
+    int isRobotsAvailable=1;
 
     /*while(c_queue->front->next!=NULL)
     {
