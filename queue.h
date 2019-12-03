@@ -21,7 +21,7 @@ struct listRecord
 };
 
 struct listRecord* parseInput(char* argv[],int *noOfRobots,int *t_maxService,int *t_maxArrival)
-{//this function parses the information from argv and returns the list and pointers
+{//this function parses the information from argv and returns thegi list and pointers
     struct listRecord* list;
     list = (struct listRecord*) malloc(sizeof(struct listRecord));
     list->size=atoi(argv[1]);
