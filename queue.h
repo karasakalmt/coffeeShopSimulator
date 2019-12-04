@@ -24,8 +24,24 @@ struct customerQueue//this is for all the queue
 
 typedef struct customerQueue *cqueue;// defined to use it easier in future usage
 
-struct customerQueue* parseInput(char* argv[], int *noOfRobots, int *t_maxService, int *t_maxArrival)
-{//this function parses the information from argv and returns thegi list and pointers
+//until the other comment line there are function prototypes will be shown
+
+struct customerQueue* parseInput(char* argv[], int *, int *, int *);
+void createCustomerList(struct customerQueue *, int , int);
+struct customerQueue * initialiseSimulator(int *r, int);
+void newCustomer(struct customerQueue * ,struct customerQueue *, int *);
+int countItem(struct customerQueue *);
+void dequeue(struct customerQueue *);
+void waitTimeAdding(struct customerQueue *);
+void displayCustomers(struct customerQueue *);
+void displayQueue(int ,struct customerQueue *);
+
+//function prototypes are done
+
+
+//Functions begins at that line, all the function has a comment line at the beginning that shows that what function does
+struct customerQueue* parseInput(char* argv[], int *noOfRobots, int *t_maxService, int *t_maxArrival)//splits the input and distributes it
+{//this function parses the information from argv and returns the list and pointers
     cqueue list;
     list = (struct customerQueue*) malloc(sizeof(struct customerQueue));
     list->size=atoi(argv[1]);
@@ -35,7 +51,7 @@ struct customerQueue* parseInput(char* argv[], int *noOfRobots, int *t_maxServic
     return list;
 }
 
-void createCustomerList(struct customerQueue *customerList, int t_maxService, int t_maxArrival)
+void createCustomerList(struct customerQueue *customerList, int t_maxService, int t_maxArrival)//Create main list with their membership priority and arrival time
 {
     pcustomer newCustomer,tmp;
     int rand_num,inner_count;// rand num to use in loop
@@ -96,7 +112,7 @@ void createCustomerList(struct customerQueue *customerList, int t_maxService, in
     }
 }
 
-struct customerQueue * initialiseSimulator(int *robotAvailability, int noOfRobots)
+struct customerQueue * initialiseSimulator(int *robotAvailability, int noOfRobots)//starts the simulation by initializing robots and initializing a empty queue for current list tracking in main loop
 {
     for(int count=0;count<noOfRobots;count++)
     {
@@ -110,7 +126,7 @@ struct customerQueue * initialiseSimulator(int *robotAvailability, int noOfRobot
     return c_queue;
 }
 
-void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int *clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
+void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int *clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue in respect of clock
 {
     pcustomer tmp;
     tmp=customerList->front->next;
@@ -152,7 +168,7 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
     }
 }
 
-int countItem(struct customerQueue *c_queue)
+int countItem(struct customerQueue *c_queue)//counts the items in current queue to use in main and dequeue function
 {
     pcustomer tmp;
     int count=0;
@@ -168,7 +184,7 @@ int countItem(struct customerQueue *c_queue)
     return count;
 }
 
-void dequeue(struct customerQueue *c_queue)
+void dequeue(struct customerQueue *c_queue)//simply dequeues
 {
     pcustomer tmp;
     tmp=c_queue->front;
@@ -183,8 +199,23 @@ void dequeue(struct customerQueue *c_queue)
     }
 }
 
+void waitTimeAdding(struct customerQueue *c_queue)//adds time to customer how much they waited before they go servecustomer
+{
+    pcustomer tmp;
+    tmp=c_queue->front;
+    while(tmp!=NULL)
+    {
+        tmp->total_wait++;
+        tmp=tmp->queuenext;
+    }
+}
 
-void displayCustomers(struct customerQueue *customerList)
+void serveCustomer()
+{
+
+}
+
+void displayCustomers(struct customerQueue *customerList)//Displays the customerList(main queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer and arrival time of the customer
 {
     pcustomer tmp;
     tmp=customerList->front;
@@ -196,11 +227,11 @@ void displayCustomers(struct customerQueue *customerList)
     }
 }
 
-void displayQueue(int clock,struct customerQueue *c_queue)
+void displayQueue(int clock,struct customerQueue *c_queue)//Displays the c_queue(current queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer and arrival time of the customer
 {
     pcustomer tmp;
     tmp=c_queue->front;
-    printf("\n%d item\n%d. stage\n\n",c_queue->size,clock);
+    printf("\n%d item\n%d. minute\n\n",c_queue->size,clock);
     for(int i=0;i<c_queue->size;i++)
     {
         printf("%d %d\n",tmp->type,tmp->t_arrival);

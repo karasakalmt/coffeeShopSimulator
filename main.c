@@ -22,20 +22,19 @@ int main(int argc,char* argv[]) {
     robotAvailability = (int *) malloc(sizeof(int)*noOfRobots);
     struct customerQueue *c_queue;//struct pointer to keep the list of active customers
     c_queue=initialiseSimulator(robotAvailability,noOfRobots);
-    int isRobotsAvailable=1;
 
-    //while(c_queue->front->next!=NULL)
-    while(c_queue->size!=customerList->size)
+    while(c_queue->size!=customerList->size)//the loop that manages the whole simulation
     {
         clock++;
         newCustomer(customerList ,c_queue, &clock);
-        if(countItem(c_queue)>0)
+        if(countItem(c_queue)>0)//when queue is not empty do!
         {
-
+            waitTimeAdding(c_queue);
         }
         displayQueue(clock,c_queue);
 
     }
+
 
     displayCustomers(customerList);
 
