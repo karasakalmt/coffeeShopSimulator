@@ -102,40 +102,52 @@ struct customerQueue * initialiseSimulator(int *robotAvailability, int noOfRobot
     {
         robotAvailability[count]=1;
     }
-    cqueue cust_q;
-    cust_q=(struct customerQueue *) malloc(sizeof(struct customerQueue));
-    cust_q->front=NULL;
-    cust_q->rear=NULL;
-    cust_q->size=0;
-    return cust_q;
+    cqueue c_queue;//to simulate current queue
+    c_queue=(struct customerQueue *) malloc(sizeof(struct customerQueue));
+    c_queue->front=NULL;
+    c_queue->rear=NULL;
+    c_queue->size=0;
+    return c_queue;
 }
 
-int newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
+void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_queue, int *clock)//Because of i already have ordered the queue in createCustomerList function with their arrival time and priorities, this function only will add the customers to the c_queue
 {
     pcustomer tmp;
-    tmp=c_queue->front;
+    tmp=customerList->front->next;
     int count;
-    if(clock==1)
-    {
-        c_queue->front=customerList->front;
-        tmp=c_queue->front;
-        c_queue->size++;
-        while(tmp->next->t_arrival==tmp->t_arrival)
-        {
-            tmp->queuenext = tmp->next;
-            tmp=tmp->next;
-            c_queue->size++;
-        }
-        tmp->queuenext=NULL;
-        return tmp->t_arrival;
-    }
-    for(count=0;count<c_queue->size;count++)
+
+    for(count=1;count<c_queue->size;count++)//travers to last item added
     {
         tmp=tmp->next;
     }
-    for(;count<customerList->size;count++)
-    {
 
+    if(c_queue->front==NULL)
+    {
+        c_queue->front = tmp;
+        c_queue->rear = tmp;
+        tmp->queuenext=NULL;
+        c_queue->size++;
+        *clock=tmp->t_arrival;
+    }
+    if(clock==tmp->next->t_arrival)
+    {
+        if(c_queue->front!=NULL)
+        {
+            tmp->queuenext = tmp->next;
+            tmp = tmp->queuenext;
+            c_queue->size++;
+        }
+
+        while(tmp->t_arrival==tmp->next->t_arrival)
+        {
+            tmp->queuenext = tmp->next;
+            tmp = tmp->queuenext;
+            c_queue->size++;
+            if (tmp->next==NULL)
+                break;
+        }
+        c_queue->rear = tmp;
+        tmp->queuenext=NULL;
     }
 }
 
@@ -147,5 +159,18 @@ void displayCustomers(struct customerQueue *customerList)
     {
         tmp=tmp->next;
         printf("%d %d\n",tmp->type,tmp->t_arrival);
+    }
+}
+
+void displayQueue(int clock,struct customerQueue *c_queue)
+{
+    pcustomer tmp;
+    tmp=c_queue->front;
+    printf("\n%d item\n%d. stage\n\n",c_queue->size,clock);
+    while(tmp->queuenext!=NULL)
+    {
+        tmp=tmp->queuenext;
+        printf("%d %d\n",tmp->type,tmp->t_arrival);
+
     }
 }
