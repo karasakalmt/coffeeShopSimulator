@@ -25,11 +25,14 @@ int main(int argc,char* argv[]) {
     int isRobotsAvailable=1;
 
     //while(c_queue->front->next!=NULL)
-    while(clock<25)
+    while(c_queue->size!=customerList->size)
     {
         clock++;
         newCustomer(customerList ,c_queue, &clock);
+        if(countItem(c_queue)>0)
+        {
 
+        }
         displayQueue(clock,c_queue);
 
     }

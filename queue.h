@@ -129,7 +129,8 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
         c_queue->size++;
         *clock=tmp->t_arrival;
     }
-    if(clock==tmp->next->t_arrival)
+    if(tmp->next!= NULL)
+    if(*clock==tmp->next->t_arrival)
     {
         if(c_queue->front!=NULL)
         {
@@ -137,7 +138,7 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
             tmp = tmp->queuenext;
             c_queue->size++;
         }
-
+        if(tmp->next!= NULL)
         while(tmp->t_arrival==tmp->next->t_arrival)
         {
             tmp->queuenext = tmp->next;
@@ -151,10 +152,43 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
     }
 }
 
+int countItem(struct customerQueue *c_queue)
+{
+    pcustomer tmp;
+    int count=0;
+    tmp=c_queue->front;
+    if(tmp==NULL)
+        return count;
+    do
+    {
+        tmp=tmp->queuenext;
+        count++;
+    }
+    while(tmp!=NULL);
+    return count;
+}
+
+void dequeue(struct customerQueue *c_queue)
+{
+    pcustomer tmp;
+    tmp=c_queue->front;
+    if(tmp->queuenext==NULL)
+    {
+        c_queue->front=NULL;
+        c_queue->rear=NULL;
+    }
+    else
+    {
+        c_queue->front=tmp->queuenext;
+    }
+}
+
+
 void displayCustomers(struct customerQueue *customerList)
 {
     pcustomer tmp;
     tmp=customerList->front;
+    printf("\n\n");
     for(int i=0;i<customerList->size;i++)
     {
         tmp=tmp->next;
@@ -167,10 +201,10 @@ void displayQueue(int clock,struct customerQueue *c_queue)
     pcustomer tmp;
     tmp=c_queue->front;
     printf("\n%d item\n%d. stage\n\n",c_queue->size,clock);
-    while(tmp->queuenext!=NULL)
+    for(int i=0;i<c_queue->size;i++)
     {
-        tmp=tmp->queuenext;
         printf("%d %d\n",tmp->type,tmp->t_arrival);
-
+        tmp=tmp->queuenext;
     }
+
 }
