@@ -32,7 +32,7 @@ int main(int argc,char* argv[]) {
     struct customerQueue *c_queue;//struct pointer to keep the list of active customers
     c_queue=initialiseSimulator(robotAvailability,noOfRobots,robotServed);
 
-    displayCustomers(customerList);
+    //displayCustomers(customerList);//shows customer list(optional usage)
 
     //the loop that manages the whole simulation
     while(mainLoopController(c_queue,customerList,robotAvailability,noOfRobots))
@@ -41,11 +41,11 @@ int main(int argc,char* argv[]) {
         newCustomer(customerList ,c_queue, clock);
         serveCustomer(c_queue, robotAvailability, noOfRobots, robotServed);
         waitTimeAdding(c_queue);
-        displayQueue(clock,c_queue);
+        //displayQueue(clock,c_queue);//can be used to see the procces inside main loop(optional usage)
     }
 
 
-    displayCustomers(customerList);
+    //displayCustomers(customerList);//can be used to see customer list(optional usage)
     reportStatistics(customerList,robotServed,noOfRobots,clock);
 
     return 0;

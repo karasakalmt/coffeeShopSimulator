@@ -36,6 +36,8 @@ void waitTimeAdding(struct customerQueue *);
 int isRobotsAvailable(int *, int );
 void serveCustomer(struct customerQueue *, int *, int , int *);
 int mainLoopController(struct customerQueue *, struct customerQueue *, int *, int);
+void reportStatistics(struct customerQueue *,int *, int , int);
+
 void displayCustomers(struct customerQueue *);
 void displayQueue(int ,struct customerQueue *);
 
@@ -278,7 +280,7 @@ int mainLoopController(struct customerQueue *c_queue, struct customerQueue *cust
     return 0;
 }
 
-void reportStatistics(struct customerQueue *customerList,int *robotServed, int noOfRobots, int clock)
+void reportStatistics(struct customerQueue *customerList,int *robotServed, int noOfRobots, int clock)//gives statistics of customers (whole output)
 {
     int averageWait=0,maxWait,popularCoffee,*coffeeChosen;
     coffeeChosen=(int *) malloc(sizeof(int)*4);
@@ -333,6 +335,8 @@ void reportStatistics(struct customerQueue *customerList,int *robotServed, int n
     }
 
 }
+
+
 //Functions to see simulation clearer
 void displayCustomers(struct customerQueue *customerList)//Displays the customerList(main queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer and arrival time of the customer
 {
