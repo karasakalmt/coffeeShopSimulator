@@ -33,7 +33,9 @@ void newCustomer(struct customerQueue * ,struct customerQueue *, int );
 int countItem(struct customerQueue *);
 struct customer* dequeue(struct customerQueue *);
 void waitTimeAdding(struct customerQueue *);
-//will be changed
+int isRobotsAvailable(int *, int );
+void serveCustomer(struct customerQueue *, int *, int , int *);
+int mainLoopController(struct customerQueue *, struct customerQueue *, int *, int);
 void displayCustomers(struct customerQueue *);
 void displayQueue(int ,struct customerQueue *);
 
@@ -135,12 +137,16 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
     int count;
     for(count=1;count<c_queue->size;count++)//travers to last item added
     {
+        if(tmp->next==NULL)
+            break;
         tmp=tmp->next;
     }
     if(c_queue->front==NULL)
     {
         for(;count<=c_queue->size;count++)//travers to last item added
         {
+            if(tmp->next==NULL)
+                break;
             tmp=tmp->next;
         }
         if(tmp->t_arrival==clock) {
@@ -212,12 +218,13 @@ struct customer* dequeue(struct customerQueue *c_queue)//simply dequeues
 
 void waitTimeAdding(struct customerQueue *c_queue)//adds time to customer how much they waited before they go servecustomer
 {
-    pcustomer tmp;
-    tmp=c_queue->front;
-    while(tmp!=NULL)
-    {
-        tmp->total_wait++;
-        tmp=tmp->queuenext;
+    if(countItem(c_queue)!=0) {
+        pcustomer tmp;
+        tmp = c_queue->front;
+        while (tmp != NULL) {
+            tmp->total_wait++;
+            tmp = tmp->queuenext;
+        }
     }
 }
 
@@ -257,6 +264,76 @@ void serveCustomer(struct customerQueue *c_queue, int *robotAvailability, int no
     }
 }
 
+int mainLoopController(struct customerQueue *c_queue, struct customerQueue *customerList, int *robotAvailability, int noOfRobots)//if any of the robots busy or all the custmer not added yet dont end the loop
+{
+    if(c_queue->size!=customerList->size)
+        return 1;
+    if(c_queue->front!=NULL && c_queue->size==customerList->size)
+        return 1;
+    for(int count=0;count<noOfRobots;count++)
+    {
+        if(robotAvailability[count]!=0)
+            return 1;
+    }
+    return 0;
+}
+
+void reportStatistics(struct customerQueue *customerList,int *robotServed, int noOfRobots, int clock)
+{
+    int averageWait=0,maxWait,popularCoffee,*coffeeChosen;
+    coffeeChosen=(int *) malloc(sizeof(int)*4);
+    pcustomer tmp;//customer pointer to travers
+    tmp=customerList->front->next;
+    printf("\n\nNumber of robots: %d",noOfRobots);
+    printf("\nNumber of customers: %d\n\n",customerList->size);
+    printf("The number of customers for each robot:");
+    for(int count=0;count<noOfRobots;count++)
+    {
+        printf("\nRobot %d ID served: %d people",count,robotServed[count]);
+    }
+    printf("\n\nCompletion time: %d",clock);
+
+    maxWait=tmp->total_wait;
+    while(tmp!=NULL)
+    {
+        averageWait+=tmp->total_wait;
+        if(tmp->total_wait>maxWait)
+            maxWait=tmp->total_wait;
+        popularCoffee=tmp->coffee_type;
+        coffeeChosen[popularCoffee]++;
+        tmp=tmp->next;
+    }
+
+
+    averageWait/=customerList->size;
+    printf("\nAverage time spent in the queue: %d",averageWait);
+    printf("\nMaximum waiting time: %d",maxWait);
+
+    popularCoffee=0;
+    for(int count=0;count<4;count++)
+    {
+        if(coffeeChosen[popularCoffee]<coffeeChosen[count])
+            popularCoffee=count;
+    }
+    switch (popularCoffee){//0 --> espresso, 1 --> americano, 2 --> latte, 3 --> cappuccino
+        case 0:
+            printf("\nMost popular coffee type: Espresso");
+            break;
+        case 1:
+            printf("\nMost popular coffee type: Americano");
+            break;
+        case 2:
+            printf("\nMost popular coffee type: Latte");
+            break;
+        case 3:
+            printf("\nMost popular coffee type: Cappuccino");
+            break;
+        default:
+            break;
+    }
+
+}
+//Functions to see simulation clearer
 void displayCustomers(struct customerQueue *customerList)//Displays the customerList(main queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer and arrival time of the customer
 {
     pcustomer tmp;
@@ -265,11 +342,11 @@ void displayCustomers(struct customerQueue *customerList)//Displays the customer
     for(int i=0;i<customerList->size;i++)
     {
         tmp=tmp->next;
-        printf("%d %d\n",tmp->type,tmp->t_arrival);
+        printf("Customer Type:%d Arrival Time:%d Service Time:%d Total Wait:%d Coffee type:%d\n", tmp->type, tmp->t_arrival, tmp->t_service, tmp->total_wait, tmp->coffee_type);
     }
 }
 
-void displayQueue(int clock,struct customerQueue *c_queue)//Displays the c_queue(current queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer and arrival time of the customer
+void displayQueue(int clock,struct customerQueue *c_queue)//Displays the c_queue(current queue).I will leave the functions in main if you need to see the procces you can uncomment them and see the priority of the customer, arrival time of the customer and service time
 {
     pcustomer tmp;
     tmp=c_queue->front;
@@ -277,7 +354,7 @@ void displayQueue(int clock,struct customerQueue *c_queue)//Displays the c_queue
     for(int i=0;i<c_queue->size;i++)
     {
         if(tmp!=NULL) {
-            printf("%d %d\n", tmp->type, tmp->t_arrival);
+            printf("Customer Type:%d Arrival Time:%d Service Time:%d\n", tmp->type, tmp->t_arrival, tmp->t_service);
             tmp = tmp->queuenext;
         }
     }

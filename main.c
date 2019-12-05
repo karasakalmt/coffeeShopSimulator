@@ -35,21 +35,18 @@ int main(int argc,char* argv[]) {
     displayCustomers(customerList);
 
     //the loop that manages the whole simulation
-    while(c_queue->size!=customerList->size)
+    while(mainLoopController(c_queue,customerList,robotAvailability,noOfRobots))
     {
         clock++;
         newCustomer(customerList ,c_queue, clock);
-        //dequeue(c_queue);
         serveCustomer(c_queue, robotAvailability, noOfRobots, robotServed);
-        if(countItem(c_queue)>0)//when queue is not empty do!
-        {
-            waitTimeAdding(c_queue);
-        }
+        waitTimeAdding(c_queue);
         displayQueue(clock,c_queue);
     }
 
 
     displayCustomers(customerList);
+    reportStatistics(customerList,robotServed,noOfRobots,clock);
 
     return 0;
 }
