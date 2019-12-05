@@ -6,4 +6,4 @@ Customers are initialized randomly and inserted in a queue(link list implementat
 - Programs main output is giving statistics about coffee shop, robots, coffees, time spent on line
 - There are functions commented in main you might want to try them to see clearly what program does
 - I've added as much as comment that i can
-***I hope you enjoy!***
+#I hope you enjoy!
