@@ -40,7 +40,7 @@ int main(int argc,char* argv[]) {
         clock++;
         newCustomer(customerList ,c_queue, clock);
         //dequeue(c_queue);
-        //serveCustomer(c_queue, robotAvailability, noOfRobots, robotServed);
+        serveCustomer(c_queue, robotAvailability, noOfRobots, robotServed);
         if(countItem(c_queue)>0)//when queue is not empty do!
         {
             waitTimeAdding(c_queue);

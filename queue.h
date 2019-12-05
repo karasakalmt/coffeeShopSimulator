@@ -132,15 +132,14 @@ void newCustomer(struct customerQueue *customerList ,struct customerQueue *c_que
 {
     pcustomer tmp;
     tmp=customerList->front->next;
-
-    for(int count=1;count<c_queue->size;count++)//travers to last item added
+    int count;
+    for(count=1;count<c_queue->size;count++)//travers to last item added
     {
         tmp=tmp->next;
     }
-
     if(c_queue->front==NULL)
     {
-        for(int count=1;count<=c_queue->size;count++)//travers to last item added
+        for(;count<=c_queue->size;count++)//travers to last item added
         {
             tmp=tmp->next;
         }
